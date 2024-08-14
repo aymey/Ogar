@@ -111,7 +111,8 @@ Virus.prototype.feed = function(node) {
 };
 
 Virus.prototype.onAdd = function(gameServer) {
-    gameServer.nodesVirus.push(this);
+    this.gameServer = gameServer
+    this.gameServer.nodesVirus.push(this);
 };
 
 Virus.prototype.onRemove = function() {
