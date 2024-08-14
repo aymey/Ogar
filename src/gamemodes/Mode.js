@@ -1,3 +1,5 @@
+var Entity = require('../entity');
+
 function Mode() {
     this.ID = -1;
     this.name = "Blank";
@@ -18,7 +20,7 @@ Mode.prototype.onServerInit = function(gameServer) {
 };
 
 Mode.prototype.onTick = function(gameServer) {
-    // Called on every game tick 
+    // Called on every game tick
 };
 
 Mode.prototype.onChange = function(gameServer) {
@@ -40,6 +42,9 @@ Mode.prototype.pressQ = function(gameServer, player) {
     if (player.spectate) {
         if (!player.freeRoam) player.freeRoam = true;
         else player.freeRoam = false;
+    } else {
+        var v = new Entity.Virus(gameServer.getNextNodeId(), null, player.mouse, 100);
+        gameServer.addNode(v);
     }
 };
 
