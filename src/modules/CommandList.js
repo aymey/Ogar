@@ -57,6 +57,7 @@ function Commands() {
             f: function(gameServer, split) {
                 console.log("[Help] ======================== HELP ======================");
                 console.log("[Help] <x> is a required field, [x] is an optional field.");
+                console.log("reset\nfood\ngamemode\nkick\nkickall\nkill\nkillall\nmass\nmerge\nname\nplayerlist\npause\nreload\nresetaniteam\nstatus\ndelay\ndebug\ntp\nvirus");
                 gameServer.pluginHandler.onHelpCommand();
                 console.log("[Help] ====================================================");
             },
@@ -729,20 +730,28 @@ function Commands() {
                     y: parseInt(split[2])
                 };
                 var mass = parseInt(split[3]);
+                var amount = parseInt(split[4]);
 
                 // Make sure the input values are numbers
                 if (isNaN(pos.x) || isNaN(pos.y)) {
                     console.log("[Console] Invalid coordinates");
                     return;
                 }
+
                 if (isNaN(mass)) {
                     mass = gameServer.config.virusStartMass;
                 }
 
+                if (isNaN(amount)) {
+                    amount = 1;
+                }
+
                 // Spawn
-                var v = new Entity.Virus(gameServer.getNextNodeId(), null, pos, mass);
-                gameServer.addNode(v);
-                console.log("[Console] Spawned 1 virus at (" + pos.x + " , " + pos.y + ")");
+                for(let i = 0; i < amount; i++) {
+                    var v = new Entity.Virus(gameServer.getNextNodeId(), null, pos, mass);
+                    gameServer.addNode(v);
+                }
+                console.log("[Console] Spawned " + amount + " virus' at (" + pos.x + " , " + pos.y + ")");
             },
             name: "virus",
             desc: "Spawns a virus at given coordinates.",

@@ -42,14 +42,66 @@ Mode.prototype.pressQ = function(gameServer, player) {
     if (player.spectate) {
         if (!player.freeRoam) player.freeRoam = true;
         else player.freeRoam = false;
-    } else {
-        var v = new Entity.Virus(gameServer.getNextNodeId(), null, player.mouse, 100);
-        gameServer.addNode(v);
+        return;
+    }
+
+    switch(gameServer.config.power) {
+        case 1: // spawn virus
+            var v = new Entity.Virus(gameServer.getNextNodeId(), null, player.mouse, 100);
+            gameServer.addNode(v);
+            break;
+        case 2: // teleport
+            player.cells.sort(function(a, b) {
+                if(a.mass < b.mass) return 1;
+                if(a.mass > b.mass) return -1;
+                return 0;
+            })
+
+            for(var i in player.cells) {
+                player.cells[i].position = player.mouse.clone();
+            }
+            break;
+        case 3: // food
+            for(let i = 0; i < 100; i++) {
+                var f = new Entity.Food(gameServer.getNextNodeId(), null, player.mouse, 50, gameServer);
+                f.setColor(gameServer.getRandomColor());
+                gameServer.currentFood++;
+                gameServer.addNode(f);
+            }
+            break;
+        case 4: // mass
+            for (var i in player.cells) {
+                player.cells[i].mass += 50;
+            }
+            break;
+        case 5: // merge
+            const set = NaN;
+            var state;
+            if (set == "true" || set == "yes" || set == "1") {
+                player.mergeOverride = true;
+                state = true;
+            } else if (set == "false" || set == "no" || set == "0") {
+                player.mergeOverride = false;
+                state = false;
+            } else {
+                if (player.cells.length == 1) {
+                    break;
+                }
+                if (player.mergeOverride) {
+                    player.mergeOverride = false;
+                } else {
+                    player.mergeOverride = true;
+                }
+
+                state = player.mergeOverride;
+            }
+            break;
     }
 };
 
 Mode.prototype.pressW = function(gameServer, player) {
     // Called when the W key is pressed
+
     gameServer.nodeHandler.ejectMass(player);
 };
 
