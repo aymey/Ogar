@@ -72,6 +72,13 @@ PacketHandler.prototype.handleMessage = function(message) {
             // W Press - Eject mass
             this.pressW = true;
             break;
+        case 99:
+            // chat message
+            let flags = message.readUInt8(1, true);
+            let cmsg = message.slice(2, message.length - 1).toString('utf-8');
+
+            this.socket.sendPacket(new Packet.Chat(flags, {r: 255, g: 255, b: 255}, this.socket.playerTracker.name, cmsg));
+            break;
         case 254:
             // Connection Start
             if (message.length == 5) {

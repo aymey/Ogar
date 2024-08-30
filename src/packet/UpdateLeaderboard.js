@@ -11,13 +11,13 @@ module.exports = UpdateLeaderboard;
 
 UpdateLeaderboard.prototype.build = function() {
     var buffer = new DynamicBuffer(true);
-    
+
     switch (this.packetLB) {
         case 48:
             // Custom text list
             buffer.setUint8(48);                                                // Packet ID
             buffer.setUint32(this.leaderboard.length);                          // String amount
-            
+
             for (var i = 0; i < this.leaderboard.length; i++) {
                 if (this.protocolVersion != 5) {
                     buffer.setStringUTF8(                                       // UTF-8 string
